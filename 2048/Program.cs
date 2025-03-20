@@ -26,7 +26,7 @@ namespace _2048
                 case 0: 
                     for (int row = 0; row < 4; row++) //VÄNSTER
                         {
-                        for (int col = 0; col < 3; col++) // Loop inkluderar ej col 4 
+                        for (int col = 0; col < 3; col++) // Loop inkluderar ej sista kolumnen 
                             {
                             //LIKA SLÅS IHOP (0 HOPPAS ÖVER)
                             if (spelplan[row, col] != 0)
@@ -58,12 +58,12 @@ namespace _2048
                 case 1: 
                     for (int col = 0; col < 4; col++)  //UPP
                     {
-                        for (int row = 3; row > 0; row--) // inkluderar ej rad 0
+                        for (int row = 0; row < 3; row++) // inkluderar ej sista raden
                         {
                             //LIKA SLÅS IHOP
                             if (spelplan[row, col] != 0)
                             {
-                                for (int testRow = row - 1; testRow >= 0; testRow--)
+                                for (int testRow = row + 1 ; testRow <= 3; testRow++)
                                 {
                                     if (spelplan[testRow, col] == 0) continue;
                                     if (spelplan[testRow, col] != spelplan[row, col]) break;
@@ -74,8 +74,8 @@ namespace _2048
                                 }
                             }
 
-                            //SKIFTA
-                            for (int testRow = row-1; testRow <3 ; testRow++)
+                            //SKIFTA NOLLOR NEDÅT
+                            for (int testRow = row; testRow < 3 ; testRow++)
                             {
                                 if (spelplan[testRow, col] == 0)
                                 {
@@ -92,12 +92,12 @@ namespace _2048
                 case 2:
                     for (int row = 0; row < 4; row++) //HÖGER
                     {
-                        for (int col = 0; col < 3; col++) //SKIFTAR FRÅN VÄNSTER TILL HÖGER inkluderar ej col 4 
+                        for (int col = 3; col > 0; col--) //Ej första kolumnen
                         {
                             //LIKA SLÅS IHOP (0 HOPPAS ÖVER)
                             if (spelplan[row, col] != 0)
                             {
-                                for (int testCol = col + 1; testCol <= 3; testCol++)
+                                for (int testCol = col - 1; testCol >= 0; testCol--)
                                 {
                                     if (spelplan[row, testCol] == 0) continue;
                                     if (spelplan[row, testCol] != spelplan[row, col]) break;
@@ -109,7 +109,7 @@ namespace _2048
                             }
 
                             //SKIFTA NOLLORNA ÅT VÄNSTER
-                            for (int testCol = col+1; testCol > 0; testCol--)
+                            for (int testCol = col; testCol > 0; testCol--)
                             {
                                 if (spelplan[row, testCol] == 0)
                                 {
@@ -126,19 +126,26 @@ namespace _2048
                 case 3:
                     for (int col = 0; col < 4; col++)  //NER
                     {
-                        int ihopslagen = -1;
-                        for (int row = 0; row < 3; row++) //SKIFTAR UPPIFRÅN OCH NER inkluderar ej rad 4
+                        //int ihopslagen = -1;
+                        for (int row = 3; row > 0; row--) //SKIFTAR UPPIFRÅN OCH NER inkluderar ej rad 4
                         {
                             //LIKA SLÅS IHOP
-                            if (spelplan[row, col] != 0 && ihopslagen != row
-                            && spelplan[row, col] == spelplan[row + 1, col])
+                            if (spelplan[row, col] != 0)
                             {
-                                spelplan[row, col] = spelplan[row, col] * 2;
-                                spelplan[row + 1, col] = 0;
-                                ihopslagen = row + 1;
+                                for (int testRow = row - 1; testRow >= 0; testRow--)
+                                {
+                                    if (spelplan[testRow, col] == 0) continue;
+                                    if (spelplan[testRow, col] != spelplan[row, col]) break;
+
+                                    spelplan[row, col] = spelplan[row, col] * 2;
+                                    spelplan[testRow, col] = 0;
+                                    break;
+                                }
                             }
 
-                            for (int testRow = row+1; testRow > 0; testRow--)
+
+                            //SKIFTA NOLLORNA UPPÅT
+                            for (int testRow = row; testRow > 0; testRow--)
                             {
                                 if (spelplan[testRow, col] == 0)
                                 {
@@ -148,18 +155,11 @@ namespace _2048
                                 }
                             }
 
-
                         }
-
-
-
-
-
                     }
                     break;
             }
 
-            //Console.WriteLine("---------------------------------");
             String utskrift="";
             for (int row = 0; row < 4; row++) {
                 for (int col = 0; col < 4; col++) {
@@ -169,7 +169,6 @@ namespace _2048
                 }
                 Console.WriteLine(utskrift);
             }
-            //Console.WriteLine("---------------------------------");
         }
     }
 }
